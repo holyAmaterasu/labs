@@ -6,9 +6,9 @@ using namespace std;
 class Polynom
 {
 private:
-    int deg;
-    double* coef;
-    void correctDeg();
+    int deg; // deg  - степень многочлена
+    double* coef; // coef - указатель на тип double (массив коэффициентов)
+    void correctDeg(); // Функция корректировки степени
 
 public:
     // Конструктор без параметров
@@ -55,7 +55,7 @@ public:
     }
 
     // Функция корректировки степени полинома:
-    // коэййициент при наибольшей степение не должен быть нулевым
+    // коэффициент при наибольшей степени не должен быть нулевым
     void correctDeg()
     {
         if (coef[deg] == 0)
@@ -71,69 +71,69 @@ public:
     // Оператор сложения двух многочленов
     Polynom operator + (const Polynom& poly)
     {
-        int i;
-        Polynom* result;
+        Polynom* result; // Создаем указатель на тип Polynom
 
-        if (deg > poly.deg)
+        if (deg > poly.deg) // Если степень первого многочлена больше степени второго
         {
-            result = new Polynom(deg, coef);
+            result = new Polynom(deg, coef); // Выделяем память в куче для многочлена с большей степенью
 
             for (int i = 0; i <= poly.deg; i++)
             {
-                result->coef[i] = result->coef[i] + poly.coef[i];
+                result->coef[i] = result->coef[i] + poly.coef[i]; // Записываем массив коэффициентов
             }
         }
-        else
+        else // Иначе
         {
-            result = new Polynom(poly.deg, poly.coef);
+            result = new Polynom(poly.deg, poly.coef); // Выделяем память в куче для многочлена с большей степенью
 
             for (int i = 0; i <= deg; i++)
             {
-                result->coef[i] = result->coef[i] + poly.coef[i];
+                result->coef[i] = result->coef[i] + poly.coef[i]; // Записываем массив коэффициентов
             }
         }
 
-        result->correctDeg();
+        result->correctDeg(); 
 
-        return *result;
+        return *result; // Возвращаем полученный многочлен
     }
 
     // Оператор присваивания 
     Polynom operator = (const Polynom& poly)
     {
-        deg = poly.deg;
-        delete[] coef;
-        coef = new double[deg + 1];
+        deg = poly.deg; // Запись новой степени
+        delete[] coef; //               Удаление старого массива коэффициентов
+        coef = new double[deg + 1]; //  и создание нового
 
         for (int i = 0; i <= deg; i++) coef[i] = poly.coef[i];
 
-        return *this;
+        return *this; // Возвращаем полученный
     }
 
     // Оператор умножения числа на многочлен
     Polynom operator * (double c)
     {
-        if (c == 0)
+        if (c == 0) // Если множитель нулевой
         {
-            Polynom result;
+            Polynom result; // Создается многочлен нулевой степени
 
             return result;
         }
-        else 
+        else // Иначе
         {
-            int deg = this->deg;
+            int deg = this->deg; // Получаем степень умножаемого многочлена
 
-            for (int i = 0; i <= deg; i++) this->coef[i] = c * this->coef[i];
+            for (int i = 0; i <= deg; i++) this->coef[i] = c * this->coef[i]; // Умножаем каждый элемент массива коэффициентов на число
 
-            return *this;
+            return *this; // Возвращаем порлученный многочлен
         }
     }
 
     // Функция вывода многочлена
     void outputPoly()
     {
-        cout << fixed << setprecision(2);
+        cout << fixed << setprecision(2); // Ограничиваем вывод двумя знаками после запятой
         
+        // Вывод многочлена
         if (coef[deg] < 0)
         {
             cout << '-' << (-1) * coef[deg] << "x^" << deg;
