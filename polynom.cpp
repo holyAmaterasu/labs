@@ -122,10 +122,15 @@ public:
         else // Иначе
         {
             int deg = this->deg; // Получаем степень умножаемого многочлена
-
-            for (int i = 0; i <= deg; i++) this->coef[i] = c * this->coef[i]; // Умножаем каждый элемент массива коэффициентов на число
-
-            return *this; // Возвращаем порлученный многочлен
+            double* tmp_coef = new double[deg + 1];
+            
+            for (int i = 0; i <= deg; i++) tmp_coef[i] = c * this->coef[i]; // Умножаем каждый элемент массива коэффициентов на число
+            
+            Polynom result(deg, tmp_coef);
+            
+            delete[] tmp_coef;
+            
+            return result; // Возвращаем порлученный многочлен
         }
     }
 
