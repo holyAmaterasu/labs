@@ -114,9 +114,9 @@ public:
     {
         if (c == 0) // Если множитель нулевой
         {
-            Polynom* result; // Создается многочлен нулевой степени
+            Polynom result; // Создается многочлен нулевой степени
 
-            return *result;
+            return result;
         }
         else // Иначе
         {
