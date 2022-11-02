@@ -8,7 +8,6 @@ class Polynom
 private:
     unsigned int deg; // deg  - степень многочлена
     double* coef; // coef - указатель на тип double (массив коэффициентов)
-    void correctDeg(); // Функция корректировки степени
 
 public:
     // Конструктор без параметров
@@ -35,8 +34,16 @@ public:
         coef = new double[deg + 1];
 
         for (int i = 0; i <= deg; i++) coef[i] = new_coef[i];
-
-        this->correctDeg();
+        
+        // Корректировка степени
+        if (this->coef[deg] == 0)
+        {
+            do
+            {
+                this->deg--;
+            }
+            while (this->deg && this->coef[deg] == 0);
+        }
     }
 
     // Конструктор копирования 
@@ -52,20 +59,6 @@ public:
     ~Polynom()
     {
         delete[] coef;
-    }
-
-    // Функция корректировки степени полинома:
-    // коэффициент при наибольшей степени не должен быть нулевым
-    void correctDeg()
-    {
-        if (coef[deg] == 0)
-        {
-            do
-            {
-                deg--;
-            }
-            while (deg && coef[deg] == 0);
-        }
     }
 
     // Оператор сложения двух многочленов
@@ -92,7 +85,15 @@ public:
             }
         }
 
-        result->correctDeg(); 
+        // Корректировка степени
+        if (result->coef[deg] == 0)
+        {
+            do
+            {
+                result->deg--;
+            }
+            while (result->deg && result->coef[deg] == 0);
+        }
 
         return *result; // Возвращаем полученный многочлен
     }
