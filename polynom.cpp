@@ -6,7 +6,7 @@ using namespace std;
 class Polynom
 {
 private:
-    int deg; // deg  - степень многочлена
+    unsigned int deg; // deg  - степень многочлена
     double* coef; // coef - указатель на тип double (массив коэффициентов)
     void correctDeg(); // Функция корректировки степени
 
@@ -114,9 +114,9 @@ public:
     {
         if (c == 0) // Если множитель нулевой
         {
-            Polynom result; // Создается многочлен нулевой степени
+            Polynom* result; // Создается многочлен нулевой степени
 
-            return result;
+            return *result;
         }
         else // Иначе
         {
