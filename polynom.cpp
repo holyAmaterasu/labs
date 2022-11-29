@@ -8,7 +8,7 @@ class Polynom
 private:
     unsigned int deg; // deg  - степень многочлена
     double* coef; // coef - указатель на тип double (массив коэффициентов)
-
+    void correctDeg();
 public:
     // Конструктор без параметров
     // deg - степень многочлена, 
@@ -33,16 +33,15 @@ public:
         deg = new_deg;
         coef = new double[deg + 1];
 
-        for (int i = 0; i <= deg; i++) coef[i] = new_coef[i];
-        
+        for (unsigned int i = 0; i <= deg; i++) coef[i] = new_coef[i];
+
         // Корректировка степени
         if (this->coef[deg] == 0)
         {
             do
             {
                 this->deg--;
-            }
-            while (this->deg && this->coef[deg] == 0);
+            } while (this->deg && this->coef[deg] == 0);
         }
     }
 
@@ -52,7 +51,7 @@ public:
         deg = polynom.deg;
         coef = new double[deg + 1];
 
-        for (int i = 0; i <= deg; i++) coef[i] = polynom.coef[i];
+        for (unsigned int i = 0; i <= deg; i++) coef[i] = polynom.coef[i];
     }
 
     // Деструктор
@@ -70,7 +69,7 @@ public:
         {
             result = new Polynom(deg, coef); // Выделяем память в куче для многочлена с большей степенью
 
-            for (int i = 0; i <= poly.deg; i++)
+            for (unsigned int i = 0; i <= poly.deg; i++)
             {
                 result->coef[i] = result->coef[i] + poly.coef[i]; // Записываем массив коэффициентов
             }
@@ -79,20 +78,10 @@ public:
         {
             result = new Polynom(poly.deg, poly.coef); // Выделяем память в куче для многочлена с большей степенью
 
-            for (int i = 0; i <= deg; i++)
+            for (unsigned int i = 0; i <= deg; i++)
             {
-                result->coef[i] = result->coef[i] + poly.coef[i]; // Записываем массив коэффициентов
+                result->coef[i] = coef[i] + poly.coef[i]; // Записываем массив коэффициентов
             }
-        }
-
-        // Корректировка степени
-        if (result->coef[deg] == 0)
-        {
-            do
-            {
-                result->deg--;
-            }
-            while (result->deg && result->coef[deg] == 0);
         }
 
         return *result; // Возвращаем полученный многочлен
@@ -105,7 +94,7 @@ public:
         delete[] coef; //               Удаление старого массива коэффициентов
         coef = new double[deg + 1]; //  и создание нового
 
-        for (int i = 0; i <= deg; i++) coef[i] = poly.coef[i];
+        for (unsigned int i = 0; i <= deg; i++) coef[i] = poly.coef[i];
 
         return *this; // Возвращаем полученный
     }
@@ -123,60 +112,63 @@ public:
         {
             int deg = this->deg; // Получаем степень умножаемого многочлена
             double* tmp_coef = new double[deg + 1];
-            
-            for (int i = 0; i <= deg; i++) tmp_coef[i] = c * this->coef[i]; // Умножаем каждый элемент массива коэффициентов на число
-            
+
+            for (unsigned int i = 0; i <= deg; i++) tmp_coef[i] = c * this->coef[i]; // Умножаем каждый элемент массива коэффициентов на число
+
             Polynom result(deg, tmp_coef);
-            
+
             delete[] tmp_coef;
-            
+
             return result; // Возвращаем порлученный многочлен
         }
     }
 
-    // Функция вывода многочлена
-    void outputPoly()
+    friend ostream& operator << (ostream& stream, const Polynom& poly)
     {
-        cout << fixed << setprecision(2); // Ограничиваем вывод двумя знаками после запятой
+        stream << fixed << setprecision(2);
         
+        unsigned int n = poly.deg;
+
         // Вывод многочлена
-        if (coef[deg] < 0)
+        if (poly.coef[n] < 0)
         {
-            cout << '-' << (-1) * coef[deg] << "x^" << deg;
+            stream << '-' << (-1) * poly.coef[n] << "x^" << n;
         }
         else
         {
-            cout << coef[deg] << "x^" << deg;
+            stream << poly.coef[n] << "x^" << n;
         }
 
-        for (int i = deg - 1; i > 0; i--)
+        for (int i = n - 1; i > 0; i--)
         {
-            if (coef[i] == 1)
+            if (poly.coef[i] == 1)
             {
-                cout << " + " << "x^" << i;
+                stream << " + " << "x^" << i;
             }
-            else if (coef[i] == -1)
+            else if (poly.coef[i] == -1)
             {
-                cout << " - " << "x^" << i;
+                stream << " - " << "x^" << i;
             }
-            else if (coef[i] < 0)
+            else if (poly.coef[i] < 0)
             {
-                cout << " - " << (-1) * coef[i] << "x^" << i;
+                stream << " - " << (-1) * poly.coef[i] << "x^" << i;
             }
-            else if (coef[i] > 0)
+            else if (poly.coef[i] > 0)
             {
-                cout << " + " << coef[i] << "x^" << i;
+                stream << " + " << poly.coef[i] << "x^" << i;
             }
         }
 
-        if (coef[0] > 0)
+        if (poly.coef[0] > 0)
         {
-            cout << " + " << coef[0];
+            stream << " + " << poly.coef[0];
         }
-        else if (coef[0] < 0)
+        else if (poly.coef[0] < 0)
         {
-            cout << " - " << (-1) * coef[0];
+            stream << " - " << (-1) * poly.coef[0];
         }
+
+        return stream;
     }
 };
 
@@ -191,16 +183,52 @@ int main()
     {
         coefs[i] = i + 2;
     }
-
+    
     Polynom polynom(deg, coefs);
+    
+    cout << "Создан новый многочлен polynom:  " << polynom << endl;
+    
+    char answer;
 
-    polynom.outputPoly();
+    do
+    {
+        cout << "Хотите ввести степень многочлена и список коэф.? (y/n) ";
 
-    cout << endl;
+        cin >> answer;
 
-    polynom = polynom * 3;
+        if (answer == 'y')
+        {
+            delete[] coefs;
 
-    polynom.outputPoly();
+            cout << "Введите степень многочлена: ";
+            
+            cin >> deg;
+
+            coefs = new double[deg + 1];
+
+            cout << "Введите коэффиценты:\n";
+            for (int i = 0; i <= deg; i++)
+            {
+                cin >> coefs[i];
+            }
+            break;
+        }
+        else if (answer == 'n')
+        {
+            break;
+        }
+    } while (answer != 'y' || answer != 'n');
+    
+
+    Polynom voidPoly;
+
+    cout << "Создан новый многочлен нулевой степени voidPoly: " << voidPoly << endl;
+
+    Polynom polynom2(deg, coefs);
+
+    cout << "Создан новый многочлен polynom2: " << polynom2 << endl;
+
+    cout << "(" << polynom << ") + (" << polynom2 << ") = " << polynom + polynom2 << endl;
 
     return 0;
 }
